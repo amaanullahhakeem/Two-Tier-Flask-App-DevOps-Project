@@ -6,23 +6,33 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                echo "Checking out the code from SCM..."
+                echo 'Checking out the code from SCM...'
                 checkout scm
             }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                echo "Building the Docker image..."
+                echo 'Building the Docker image...'
                 sh 'docker build -t myflaskapp:latest .'
             }
         }
 
         stage('Deploy with Docker Compose') {
             steps {
-                echo "Deploying the application using Docker Compose..."
+                echo 'Deploying the application using Docker Compose...'
                 sh 'docker compose up -d --build'
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment completed successfully!'
+        }
+
+        failure {
+            echo 'Deployment failed. Check the Jenkins console output.'
         }
     }
 }
