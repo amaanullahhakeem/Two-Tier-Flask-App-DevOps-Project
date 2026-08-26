@@ -1,39 +1,23 @@
-```groovy
-pipeline {
+pipeline{
     agent any
-
-    stages {
-
-        stage('Checkout Code') {
-            steps {
-                echo 'Checking out the code from SCM...'
-                checkout scm
+    stages{
+        stage('Clone repo'){
+            steps{
+                git branch: 'main', url: 'https://github.com/amaanullahhakeem/Two-Tier-Flask-App-DevOps-Project.git'
             }
         }
-
-        stage('Build Docker Image') {
-            steps {
-                echo 'Building the Docker image...'
-                sh 'docker build -t myflaskapp:latest .'
+        stage('Build image'){
+            steps{
+                sh 'docker build -t flask-app .'
             }
         }
-
-        stage('Deploy with Docker Compose') {
-            steps {
-                echo 'Deploying the application using Docker Compose...'
+        stage('Deploy with docker compose'){
+            steps{
+                // existing container if they are running
+                sh 'docker compose down || true'
+                // start app, rebuilding flask image
                 sh 'docker compose up -d --build'
             }
         }
     }
-
-    post {
-        success {
-            echo 'Deployment completed successfully!'
-        }
-
-        failure {
-            echo 'Deployment failed. Check the Jenkins console output.'
-        }
-    }
 }
-```
