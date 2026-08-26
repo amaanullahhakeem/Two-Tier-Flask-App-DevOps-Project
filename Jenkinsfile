@@ -12,7 +12,7 @@ pipelines
             steps {
                 sh 'echo "Building the project..."'
                 // Add your build commands here
-            }   sh 'docker build -t ${IMAGE_NAME}:latest .'
+            }   sh 'docker build -t myflaskapp:latest .'
         }
         stage('Deploy with Docker-Compose') {
             steps {
